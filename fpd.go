@@ -120,7 +120,8 @@ func (d *Decimal) Scale() int {
 // String returns the string representatino of the decimal
 // with the trailing zeros based on the scale
 //
-// FIXME: "-" sign breaks everything in the current implementation
+// FIXME: negative value breaks everything
+// FIXME: positive scale breaks everything
 func (d *Decimal) String() string {
 	strValue := strconv.Itoa(d.value)
 
@@ -134,6 +135,11 @@ func (d *Decimal) String() string {
 		b = strings.Repeat("0", num0s) + strValue
 	}
 	return fmt.Sprintf("%v.%v", a, b)
+}
+
+// StringScaled first scales the decimal then calls .String() on it.
+func (d* Decimal) StringScaled(scale int) string {
+	return d.Rescale(scale).String()
 }
 
 // ShortString returns the string representation of the decimal
