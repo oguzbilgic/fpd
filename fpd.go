@@ -26,8 +26,8 @@ func New(value int, scale int) *Decimal {
 // Example:
 //
 // 	d := New(12345, -4)
-//	d2 := d.Rescale(-1)
-//	d3 := d2.Rescale(-4)
+//	d2 := d.rescale(-1)
+//	d3 := d2.rescale(-4)
 //	println(d1)
 //	println(d2)
 //	println(d3)
@@ -38,7 +38,7 @@ func New(value int, scale int) *Decimal {
 //	1.2
 //	1.2000
 //
-func (d *Decimal) Rescale(scale int) *Decimal {
+func (d *Decimal) rescale(scale int) *Decimal {
 	var value int
 	if scale > d.scale {
 		diff := scale - d.scale
@@ -56,20 +56,20 @@ func (d *Decimal) Rescale(scale int) *Decimal {
 }
 
 func (d *Decimal) Add(d2 *Decimal) *Decimal {
-	d3Value := d.value + d2.Rescale(d.scale).value
+	d3Value := d.value + d2.rescale(d.scale).value
 	return New(d3Value, d.scale)
 }
 
 func (d *Decimal) Sub(d2 *Decimal) *Decimal {
-	d3Value := d.value - d2.Rescale(d.scale).value
+	d3Value := d.value - d2.rescale(d.scale).value
 	return New(d3Value, d.scale)
 }
 
 func (d *Decimal) Mul(d2 *Decimal) *Decimal {
 	scale := smallestOf(d.scale, d2.scale)
-	d3Value := d.Rescale(scale).value * d2.Rescale(scale).value
+	d3Value := d.rescale(scale).value * d2.rescale(scale).value
 	d3 := New(d3Value, scale*2)
-	return d3.Rescale(d.scale)
+	return d3.rescale(d.scale)
 }
 
 func (d *Decimal) Div(d2 *Decimal) *Decimal {
@@ -81,7 +81,7 @@ func (d *Decimal) DivScale(d2 *Decimal, scale int) *Decimal {
 	smallestScale := smallestOf(d.scale, d2.scale)
 	d3Scale := -int(math.Pow(float64(smallestScale), 2))
 
-	d3Value := float64(d.Rescale(d3Scale).value) / float64(d2.Rescale(d3Scale).value)
+	d3Value := float64(d.rescale(d3Scale).value) / float64(d2.rescale(d3Scale).value)
 	d3Value = d3Value * math.Pow10(-scale)
 
 	return New(int(d3Value), scale)
@@ -97,8 +97,8 @@ func (d *Decimal) DivScale(d2 *Decimal, scale int) *Decimal {
 //
 func (d *Decimal) Cmp(d2 *Decimal) int {
 	smallestScale := smallestOf(d.scale, d2.scale)
-	dR := d.Rescale(smallestScale)
-	d2R := d2.Rescale(smallestScale)
+	dR := d.rescale(smallestScale)
+	d2R := d2.rescale(smallestScale)
 
 	if dR.value > d2R.value {
 		return 1
@@ -139,7 +139,7 @@ func (d *Decimal) String() string {
 
 // StringScaled first scales the decimal then calls .String() on it.
 func (d* Decimal) StringScaled(scale int) string {
-	return d.Rescale(scale).String()
+	return d.rescale(scale).String()
 }
 
 // ShortString returns the string representation of the decimal
