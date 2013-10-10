@@ -140,7 +140,7 @@ func (d *Decimal) String() string {
 // with out the trailing zeros
 //
 // FIXME: Implement
-func (d *Decimal) ShortString() string {
+func (d *Decimal) StringShort() string {
 	return d.String()
 }
 
