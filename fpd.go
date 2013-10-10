@@ -113,6 +113,10 @@ func (d *Decimal) Value() int {
 	return d.value
 }
 
+func (d *Decimal) ValueScaled(scale int) int {
+	return d.value.rescale().Value()
+}
+
 func (d *Decimal) Scale() int {
 	return d.scale
 }
