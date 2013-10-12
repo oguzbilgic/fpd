@@ -24,8 +24,8 @@ func NewFromInt(value int) *Decimal {
 	return New(value, 1)
 }
 
-// Rescale returns a rescaled version of the decimal. Returned 
-// decimal may be less precise if the given scale is bigger 
+// Rescale returns a rescaled version of the decimal. Returned
+// decimal may be less precise if the given scale is bigger
 // than the initial scale of the Decimal
 //
 // Example:
@@ -36,8 +36,8 @@ func NewFromInt(value int) *Decimal {
 //	println(d1)
 //	println(d2)
 //	println(d3)
-//	
-// Output: 
+//
+// Output:
 //
 //	1.2345
 //	1.2
@@ -119,7 +119,7 @@ func (d *Decimal) Value() int {
 }
 
 func (d *Decimal) ValueScaled(scale int) int {
-	return d.value.rescale().Value()
+	return d.rescale(scale).Value()
 }
 
 func (d *Decimal) Scale() int {
@@ -147,7 +147,7 @@ func (d *Decimal) String() string {
 }
 
 // StringScaled first scales the decimal then calls .String() on it.
-func (d* Decimal) StringScaled(scale int) string {
+func (d *Decimal) StringScaled(scale int) string {
 	return d.rescale(scale).String()
 }
 
