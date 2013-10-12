@@ -114,12 +114,8 @@ func (d *Decimal) Cmp(d2 *Decimal) int {
 	}
 }
 
-func (d *Decimal) Value() int {
+func (d *Decimal) Int() int {
 	return d.value
-}
-
-func (d *Decimal) ValueScaled(scale int) int {
-	return d.rescale(scale).Value()
 }
 
 func (d *Decimal) Scale() int {
