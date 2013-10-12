@@ -66,8 +66,13 @@ func (d *Decimal) Add(d2 *Decimal) *Decimal {
 }
 
 func (d *Decimal) Sub(d2 *Decimal) *Decimal {
-	d3Value := d.value - d2.rescale(d.scale).value
-	return New(d3Value, d.scale)
+	smallestScale := smallestOf(d.scale, d2.scale)
+	dR := d.rescale(smallestScale)
+	d2R := d2.rescale(smallestScale)
+
+	d3Value := dR.value - d2R.value
+	d3 := New(d3Value, smallestScale)
+	return d3.rescale(d.scale)
 }
 
 func (d *Decimal) Mul(d2 *Decimal) *Decimal {
