@@ -147,14 +147,6 @@ func (d *Decimal) StringScaled(scale int) string {
 	return d.rescale(scale).String()
 }
 
-// ShortString returns the string representation of the decimal
-// with out the trailing zeros
-//
-// FIXME: Implement
-func (d *Decimal) StringShort() string {
-	return d.String()
-}
-
 func smallestOf(x, y int) int {
 	if x >= y {
 		return y
