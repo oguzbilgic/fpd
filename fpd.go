@@ -19,11 +19,6 @@ func New(value int, scale int) *Decimal {
 	return &Decimal{value, scale}
 }
 
-// NewFromInt is a shorthand version of New(value, 1)
-func NewFromInt(value int) *Decimal {
-	return New(value, 1)
-}
-
 // Rescale returns a rescaled version of the decimal. Returned
 // decimal may be less precise if the given scale is bigger
 // than the initial scale of the Decimal
