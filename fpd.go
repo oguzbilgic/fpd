@@ -109,9 +109,9 @@ func (d *Decimal) Cmp(d2 *Decimal) int {
 		return 1
 	} else if dR.value == d2R.value {
 		return 0
-	} else {
-		return -1
 	}
+
+	return -1
 }
 
 func (d *Decimal) Int() int {
@@ -124,10 +124,23 @@ func (d *Decimal) Scale() int {
 
 // String returns the string representatino of the decimal
 // with the trailing zeros based on the scale
-//
-// FIXME: negative value breaks everything
-// FIXME: positive scale breaks everything
 func (d *Decimal) String() string {
+	return strconv.Itoa(d.value)
+}
+
+// String returns the string representatino of the decimal 
+// with the fixed point
+//
+// Example:
+//
+//     d := New(-12345, -3)
+//     println(d.String())
+//
+// Output:
+//
+//     -12.345
+//
+func (d *Decimal) FormattedString() string {
 	strValue := strconv.Itoa(d.value)
 
 	var a, b string
