@@ -2,6 +2,7 @@
 package fpd
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"math/big"
@@ -17,6 +18,18 @@ type Decimal struct {
 // New returns a new fixed-point decimal
 func New(value int64, scale int) *Decimal {
 	return &Decimal{big.NewInt(value), scale}
+}
+
+// NewFromString returns a new fixed-point decimal based
+// on the given string
+func NewFromString(value string, scale int) (*Decimal, error) {
+	dValue := big.NewInt(0)
+	_, ok := dValue.SetString(value, 10)
+	if !ok {
+		return nil, errors.New("can't convert to decimal")
+	}
+
+	return &Decimal{dValue, scale}, nil
 }
 
 // Rescale returns a rescaled version of the decimal. Returned

@@ -2,6 +2,38 @@ package fpd
 
 import "testing"
 
+func TestNewFromString1(t *testing.T) {
+	a, err := NewFromString("1234", -3)
+
+	if err != nil {
+		t.Errorf("error")
+	}
+
+	if a.String() != "1234" {
+		t.Errorf("error")
+	}
+}
+
+func TestNewFromString2(t *testing.T) {
+	a, err := NewFromString("-1234", -3)
+
+	if err != nil {
+		t.Errorf("error")
+	}
+
+	if a.String() != "-1234" {
+		t.Errorf("error")
+	}
+}
+
+func TestNewFromString3(t *testing.T) {
+	_, err := NewFromString("qwert", -3)
+
+	if err == nil {
+		t.Errorf("error")
+	}
+}
+
 func TestDecimal_Scale(t *testing.T) {
 	a := New(1234, -3)
 	if a.Scale() != -3 {
