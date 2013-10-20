@@ -32,6 +32,6 @@ func main() {
 	balance = balance.Sub(sellFee)
 
 	// Final balance
-	fmt.Println(balance)
+	fmt.Println(balance.FormattedString())
 	// Did this trade turn into profit? :)
 }

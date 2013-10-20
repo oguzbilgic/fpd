@@ -119,6 +119,26 @@ func TestDecimal_Mul(t *testing.T) {
 	}
 }
 
+func TestDecimal_Div1(t *testing.T) {
+	a := New(1398699, -4)
+	b := New(1006, -3)
+
+	c := a.Div(b)
+	if c.String() != "1390356" {
+		t.Errorf(c.String())
+	}
+}
+
+func TestDecimal_Div2(t *testing.T) {
+	a := New(2345, -3)
+	b := New(2, 0)
+
+	c := a.Div(b)
+	if c.String() != "1172" {
+		t.Errorf(c.String())
+	}
+}
+
 func TestDecimal_Cmp1(t *testing.T) {
 	a := New(123, 3)
 	b := New(-1234, 2)

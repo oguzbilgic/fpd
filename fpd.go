@@ -96,6 +96,19 @@ func (d *Decimal) Mul(d2 *Decimal) *Decimal {
 	return d3.rescale(d.scale)
 }
 
+// Mul divides d by d2 and returns d3
+func (d *Decimal) Div(d2 *Decimal) *Decimal {
+	baseScale := -int(math.Pow(float64(smallestOf(d.scale, d2.scale)), 2))
+
+	rd := d.rescale(baseScale + d.scale)
+	rd2 := d2.rescale(baseScale)
+
+	d3Value := big.NewInt(0).Div(rd.value, rd2.value)
+
+	d3 := &Decimal{d3Value, d.scale}
+	return d3.rescale(d.scale)
+}
+
 // Cmp compares x and y and returns -1, 0 or 1
 //
 // Example
@@ -115,6 +128,7 @@ func (d *Decimal) Cmp(d2 *Decimal) int {
 func (d *Decimal) Scale() int {
 	return d.scale
 }
+
 // String returns the string representatino of the decimal
 //
 // Example:
