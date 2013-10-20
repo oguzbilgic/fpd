@@ -1,6 +1,6 @@
-# *fpd.Decimal
+# *fpd.Decimal [![Build Status](https://travis-ci.org/oguzbilgic/fpd.png?branch=master)](https://travis-ci.org/oguzbilgic/fpd)
 
-Package implements fixed-point decimal
+Package implements fixed-point decimal 
 
 ## Usage
 
