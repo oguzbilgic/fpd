@@ -52,17 +52,18 @@ func NewFromString(value string, scale int) (*Decimal, error) {
 //	1.2000
 //
 func (d *Decimal) rescale(scale int) *Decimal {
-	value := big.NewInt(0)
-
 	diff := int(math.Abs(float64(scale - d.scale)))
-	pow := big.NewInt(int64(math.Pow10(diff)))
+	value := d.value
+	ten := big.NewInt(10)
 
-	if scale > d.scale {
-		value = value.Quo(d.value, pow)
-	} else if scale == d.scale {
-		value = d.value
-	} else {
-		value = value.Mul(d.value, pow)
+	for diff > 0 {
+		if scale > d.scale {
+			value = value.Quo(d.value, ten)
+		} else if scale < d.scale {
+			value = value.Mul(d.value, ten)
+		}
+
+		diff--
 	}
 
 	return &Decimal{value, scale}

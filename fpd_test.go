@@ -44,7 +44,7 @@ func TestDecimal_Scale(t *testing.T) {
 func TestDecimal_recale1(t *testing.T) {
 	a := New(1234, -3).rescale(-5)
 	if a.String() != "123400" {
-		t.Errorf("error")
+		t.Errorf(a.String() + " != 123400")
 	}
 }
 
@@ -139,6 +139,15 @@ func TestDecimal_Div2(t *testing.T) {
 	}
 }
 
+func TestDecimal_Div3(t *testing.T) {
+	a := New(18275499, -6)
+	b := New(16275499, -6)
+
+	c := a.Div(b)
+	if c.String() != "1122884" {
+		t.Errorf(c.String())
+	}
+}
 func TestDecimal_Cmp1(t *testing.T) {
 	a := New(123, 3)
 	b := New(-1234, 2)
