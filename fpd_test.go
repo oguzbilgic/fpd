@@ -69,6 +69,14 @@ func TestDecimal_recale4(t *testing.T) {
 	}
 }
 
+func TestDecimal_recale5(t *testing.T) {
+	a := New(1234, 3)
+	_ = a.rescale(5)
+	if a.String() != "1234" {
+		t.Errorf("error")
+	}
+}
+
 func TestDecimal_Add1(t *testing.T) {
 	a := New(1234, -4)
 	b := New(9876, 3)

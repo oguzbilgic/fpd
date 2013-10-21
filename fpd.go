@@ -51,16 +51,16 @@ func NewFromString(value string, scale int) (*Decimal, error) {
 //	1.2
 //	1.2000
 //
-func (d *Decimal) rescale(scale int) *Decimal {
+func (d Decimal) rescale(scale int) *Decimal {
 	diff := int(math.Abs(float64(scale - d.scale)))
-	value := d.value
+	value := big.NewInt(0).Set(d.value)
 	ten := big.NewInt(10)
 
 	for diff > 0 {
 		if scale > d.scale {
-			value = value.Quo(d.value, ten)
+			value = value.Quo(value, ten)
 		} else if scale < d.scale {
-			value = value.Mul(d.value, ten)
+			value = value.Mul(value, ten)
 		}
 
 		diff--
