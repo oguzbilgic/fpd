@@ -69,6 +69,11 @@ func (d Decimal) rescale(scale int) *Decimal {
 	return &Decimal{value, scale}
 }
 
+func (d *Decimal) Abs() *Decimal {
+	d2Value := big.NewInt(0).Abs(d.value)
+	return &Decimal{d2Value, d.scale}
+}
+
 // Add adds d to d2 and return d3
 func (d *Decimal) Add(d2 *Decimal) *Decimal {
 	d3Value := big.NewInt(0).Add(d.value, d2.rescale(d.scale).value)

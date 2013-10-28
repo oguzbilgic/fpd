@@ -77,6 +77,26 @@ func TestDecimal_recale5(t *testing.T) {
 	}
 }
 
+func TestDecimal_Abs1(t *testing.T) {
+	a := New(-1234, -4)
+	b := New(1234, -4)
+
+	c := a.Abs()
+	if c.Cmp(b) != 0 {
+		t.Errorf("error")
+	}
+}
+
+func TestDecimal_Abs2(t *testing.T) {
+	a := New(-1234, -4)
+	b := New(1234, -4)
+
+	c := b.Abs()
+	if c.Cmp(a) == 0 {
+		t.Errorf("error")
+	}
+}
+
 func TestDecimal_Add1(t *testing.T) {
 	a := New(1234, -4)
 	b := New(9876, 3)
