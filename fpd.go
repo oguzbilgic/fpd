@@ -32,6 +32,14 @@ func NewFromString(value string, scale int) (*Decimal, error) {
 	return &Decimal{dValue, scale}, nil
 }
 
+func NewFromFloat(value float64, scale int) *Decimal {
+	scaleMul := math.Pow(10, -float64(scale))
+	intValue := int64(value * scaleMul)
+	dValue := big.NewInt(intValue)
+
+	return &Decimal{dValue, scale}
+}
+
 // Rescale returns a rescaled version of the decimal. Returned
 // decimal may be less precise if the given scale is bigger
 // than the initial scale of the Decimal

@@ -34,6 +34,42 @@ func TestNewFromString3(t *testing.T) {
 	}
 }
 
+func TestNewFromFloat1(t *testing.T) {
+	a := NewFromFloat(-123.4, -3)
+
+	if a.FormattedString() != "-123.400" {
+		t.Errorf("error")
+	}
+
+	if a.String() != "-123400" {
+		t.Errorf("error")
+	}
+}
+
+func TestNewFromFloat3(t *testing.T) {
+	a := NewFromFloat(123.412345, 1)
+
+	if a.String() != "12" {
+		t.Errorf(a.String() + " != 12")
+	}
+
+	if a.FormattedString() != "120" {
+		t.Errorf(a.FormattedString() + " != 120")
+	}
+}
+
+func TestNewFromFloat2(t *testing.T) {
+	a := NewFromFloat(123.412, 0)
+
+	if a.String() != "123" {
+		t.Errorf(a.String() + " != 123")
+	}
+
+	if a.FormattedString() != "123" {
+		t.Errorf(a.FormattedString() + " != 123")
+	}
+}
+
 func TestDecimal_Scale(t *testing.T) {
 	a := New(1234, -3)
 	if a.Scale() != -3 {
