@@ -3,19 +3,19 @@ package fpd
 
 // Decimal represents a fixed-point Decimal.
 type Decimal interface {
-	Abs() *Decimal
+	Abs() Decimal
 
 	// Add adds d to d2 and return d3
-	Add(d2 *Decimal) *Decimal
+	Add(d2 Decimal) Decimal
 
 	// Sub subtracts d2 from d and returns d3
-	Sub(d2 *Decimal) *Decimal
+	Sub(d2 Decimal) Decimal
 
 	// Mul multiplies d with d2 and returns d3
-	Mul(d2 *Decimal) *Decimal
+	Mul(d2 Decimal) Decimal
 
 	// Mul divides d by d2 and returns d3
-	Div(d2 *Decimal) *Decimal
+	Div(d2 Decimal) Decimal
 
 	// Cmp compares x and y and returns -1, 0 or 1
 	//
@@ -25,7 +25,7 @@ type Decimal interface {
 	// 0 if x == y
 	//+1 if x >  y
 	//
-	Cmp(d2 *Decimal) int
+	Cmp(d2 Decimal) int
 
 	Scale() int
 
