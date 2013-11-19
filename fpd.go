@@ -1,4 +1,4 @@
-// Package implements a fixed-point decimal
+// Package implements a fixed-point BigIntDecimal
 package fpd
 
 import (
@@ -9,40 +9,40 @@ import (
 	"strings"
 )
 
-// Decimal represents a fixed-point decimal.
-type Decimal struct {
+// BigIntDecimal represents a fixed-point BigIntDecimal.
+type BigIntDecimal struct {
 	value *big.Int
 	scale int
 }
 
-// New returns a new fixed-point decimal
-func New(value int64, scale int) *Decimal {
-	return &Decimal{big.NewInt(value), scale}
+// New returns a new fixed-point BigIntDecimal
+func New(value int64, scale int) *BigIntDecimal {
+	return &BigIntDecimal{big.NewInt(value), scale}
 }
 
-// NewFromString returns a new fixed-point decimal based
+// NewFromString returns a new fixed-point BigIntDecimal based
 // on the given string
-func NewFromString(value string, scale int) (*Decimal, error) {
+func NewFromString(value string, scale int) (*BigIntDecimal, error) {
 	dValue := big.NewInt(0)
 	_, ok := dValue.SetString(value, 10)
 	if !ok {
-		return nil, errors.New("can't convert to decimal")
+		return nil, errors.New("can't convert to BigIntDecimal")
 	}
 
-	return &Decimal{dValue, scale}, nil
+	return &BigIntDecimal{dValue, scale}, nil
 }
 
-func NewFromFloat(value float64, scale int) *Decimal {
+func NewFromFloat(value float64, scale int) *BigIntDecimal {
 	scaleMul := math.Pow(10, -float64(scale))
 	intValue := int64(value * scaleMul)
 	dValue := big.NewInt(intValue)
 
-	return &Decimal{dValue, scale}
+	return &BigIntDecimal{dValue, scale}
 }
 
-// Rescale returns a rescaled version of the decimal. Returned
-// decimal may be less precise if the given scale is bigger
-// than the initial scale of the Decimal
+// Rescale returns a rescaled version of the BigIntDecimal. Returned
+// BigIntDecimal may be less precise if the given scale is bigger
+// than the initial scale of the BigIntDecimal
 //
 // Example:
 //
@@ -59,7 +59,7 @@ func NewFromFloat(value float64, scale int) *Decimal {
 //	1.2
 //	1.2000
 //
-func (d Decimal) rescale(scale int) *Decimal {
+func (d BigIntDecimal) rescale(scale int) *BigIntDecimal {
 	diff := int(math.Abs(float64(scale - d.scale)))
 	value := big.NewInt(0).Set(d.value)
 	ten := big.NewInt(10)
@@ -74,44 +74,44 @@ func (d Decimal) rescale(scale int) *Decimal {
 		diff--
 	}
 
-	return &Decimal{value, scale}
+	return &BigIntDecimal{value, scale}
 }
 
-func (d *Decimal) Abs() *Decimal {
+func (d *BigIntDecimal) Abs() *BigIntDecimal {
 	d2Value := big.NewInt(0).Abs(d.value)
-	return &Decimal{d2Value, d.scale}
+	return &BigIntDecimal{d2Value, d.scale}
 }
 
 // Add adds d to d2 and return d3
-func (d *Decimal) Add(d2 *Decimal) *Decimal {
+func (d *BigIntDecimal) Add(d2 *BigIntDecimal) *BigIntDecimal {
 	d3Value := big.NewInt(0).Add(d.value, d2.rescale(d.scale).value)
-	return &Decimal{d3Value, d.scale}
+	return &BigIntDecimal{d3Value, d.scale}
 }
 
 // Sub subtracts d2 from d and returns d3
-func (d *Decimal) Sub(d2 *Decimal) *Decimal {
+func (d *BigIntDecimal) Sub(d2 *BigIntDecimal) *BigIntDecimal {
 	baseScale := smallestOf(d.scale, d2.scale)
 	rd := d.rescale(baseScale)
 	rd2 := d2.rescale(baseScale)
 
 	d3Value := big.NewInt(0).Sub(rd.value, rd2.value)
-	d3 := &Decimal{d3Value, baseScale}
+	d3 := &BigIntDecimal{d3Value, baseScale}
 	return d3.rescale(d.scale)
 }
 
 // Mul multiplies d with d2 and returns d3
-func (d *Decimal) Mul(d2 *Decimal) *Decimal {
+func (d *BigIntDecimal) Mul(d2 *BigIntDecimal) *BigIntDecimal {
 	baseScale := smallestOf(d.scale, d2.scale)
 	rd := d.rescale(baseScale)
 	rd2 := d2.rescale(baseScale)
 
 	d3Value := big.NewInt(0).Mul(rd.value, rd2.value)
-	d3 := &Decimal{d3Value, 2 * baseScale}
+	d3 := &BigIntDecimal{d3Value, 2 * baseScale}
 	return d3.rescale(d.scale)
 }
 
 // Mul divides d by d2 and returns d3
-func (d *Decimal) Div(d2 *Decimal) *Decimal {
+func (d *BigIntDecimal) Div(d2 *BigIntDecimal) *BigIntDecimal {
 	baseScale := -int(math.Pow(float64(smallestOf(d.scale, d2.scale)), 2))
 
 	rd := d.rescale(baseScale + d.scale)
@@ -119,7 +119,7 @@ func (d *Decimal) Div(d2 *Decimal) *Decimal {
 
 	d3Value := big.NewInt(0).Div(rd.value, rd2.value)
 
-	d3 := &Decimal{d3Value, d.scale}
+	d3 := &BigIntDecimal{d3Value, d.scale}
 	return d3.rescale(d.scale)
 }
 
@@ -131,7 +131,7 @@ func (d *Decimal) Div(d2 *Decimal) *Decimal {
 // 0 if x == y
 //+1 if x >  y
 //
-func (d *Decimal) Cmp(d2 *Decimal) int {
+func (d *BigIntDecimal) Cmp(d2 *BigIntDecimal) int {
 	smallestScale := smallestOf(d.scale, d2.scale)
 	rd := d.rescale(smallestScale)
 	rd2 := d2.rescale(smallestScale)
@@ -139,11 +139,11 @@ func (d *Decimal) Cmp(d2 *Decimal) int {
 	return rd.value.Cmp(rd2.value)
 }
 
-func (d *Decimal) Scale() int {
+func (d *BigIntDecimal) Scale() int {
 	return d.scale
 }
 
-// String returns the string representatino of the decimal
+// String returns the string representatino of the BigIntDecimal
 //
 // Example:
 //
@@ -154,11 +154,11 @@ func (d *Decimal) Scale() int {
 //
 //     -12345
 //
-func (d *Decimal) String() string {
+func (d *BigIntDecimal) String() string {
 	return d.value.String()
 }
 
-// String returns the string representatino of the decimal 
+// String returns the string representatino of the BigIntDecimal 
 // with the fixed point
 //
 // Example:
@@ -170,7 +170,7 @@ func (d *Decimal) String() string {
 //
 //     -12.345
 //
-func (d *Decimal) FormattedString() string {
+func (d *BigIntDecimal) FormattedString() string {
 	if d.scale >= 0 {
 		return d.rescale(0).value.String()
 	}
@@ -196,8 +196,8 @@ func (d *Decimal) FormattedString() string {
 	return fmt.Sprintf("%v.%v", a, b)
 }
 
-// StringScaled first scales the decimal then calls .String() on it.
-func (d *Decimal) StringScaled(scale int) string {
+// StringScaled first scales the BigIntDecimal then calls .String() on it.
+func (d *BigIntDecimal) StringScaled(scale int) string {
 	return d.rescale(scale).String()
 }
 
