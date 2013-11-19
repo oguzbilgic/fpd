@@ -158,7 +158,7 @@ func (d *BigIntDecimal) String() string {
 	return d.value.String()
 }
 
-// String returns the string representatino of the BigIntDecimal 
+// String returns the string representatino of the BigIntDecimal
 // with the fixed point
 //
 // Example:
