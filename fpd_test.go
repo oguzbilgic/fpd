@@ -251,13 +251,6 @@ func TestDecimal_FormattedString(t *testing.T) {
 	}
 }
 
-func TestDecimal_FormattedString5(t *testing.T) {
-	a := New(-1234, -2)
-	if a.FormattedString() != "-12.34" {
-		t.Errorf(a.FormattedString())
-	}
-}
-
 func TestDecimal_FormattedString1(t *testing.T) {
 	a := New(1234, 2)
 	if a.FormattedString() != "123400" {
@@ -282,6 +275,27 @@ func TestDecimal_FormattedString3(t *testing.T) {
 func TestDecimal_FormattedString4(t *testing.T) {
 	a := New(1000, -6)
 	if a.FormattedString() != "0.001000" {
+		t.Errorf(a.FormattedString())
+	}
+}
+
+func TestDecimal_FormattedString5(t *testing.T) {
+	a := New(-1234, -2)
+	if a.FormattedString() != "-12.34" {
+		t.Errorf(a.FormattedString())
+	}
+}
+
+func TestDecimal_FormattedString6(t *testing.T) {
+	a := NewFromFloat(0.12, -4)
+	if a.FormattedString() != "0.1200" {
+		t.Errorf(a.FormattedString())
+	}
+}
+
+func TestDecimal_FormattedString7(t *testing.T) {
+	a := NewFromFloat(-0.12, -4)
+	if a.FormattedString() != "-0.1200" {
 		t.Errorf(a.FormattedString())
 	}
 }

@@ -158,7 +158,7 @@ func (d *Decimal) String() string {
 	return d.value.String()
 }
 
-// String returns the string representatino of the decimal 
+// String returns the string representatino of the decimal
 // with the fixed point
 //
 // Example:
@@ -183,10 +183,12 @@ func (d *Decimal) FormattedString() string {
 		a = str[:len(str)+d.scale]
 		b = str[len(str)+d.scale:]
 	} else {
-		a = "0"
-
 		num0s := -d.scale - len(str)
 		b = strings.Repeat("0", num0s) + str
+	}
+
+	if a == "" {
+		a = "0"
 	}
 
 	if d.value.Sign() < 0 {
