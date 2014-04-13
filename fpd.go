@@ -2,6 +2,7 @@
 package fpd
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math"
@@ -13,6 +14,31 @@ import (
 type Decimal struct {
 	value *big.Int
 	scale int
+}
+
+func (d Decimal) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, d.FormattedString())), nil
+}
+
+func (d *Decimal) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	parts := strings.Split(s, ".")
+	if len(parts) > 2 {
+		return errors.New("too many decimal points")
+	}
+	scale := 0
+	if len(parts) == 2 {
+		scale = -len(parts[1])
+	}
+	dp, err := NewFromString(strings.Join(parts, ""), scale)
+	if err != nil {
+		return err
+	}
+	*d = *dp
+	return nil
 }
 
 // New returns a new fixed-point decimal

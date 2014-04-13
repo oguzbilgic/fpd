@@ -1,6 +1,12 @@
 package fpd
 
-import "testing"
+import (
+	"bytes"
+	"encoding/json"
+	"math/big"
+	"strings"
+	"testing"
+)
 
 func TestNewFromString1(t *testing.T) {
 	a, err := NewFromString("1234", -3)
@@ -297,5 +303,104 @@ func TestDecimal_FormattedString7(t *testing.T) {
 	a := NewFromFloat(-0.12, -4)
 	if a.FormattedString() != "-0.1200" {
 		t.Errorf(a.FormattedString())
+	}
+}
+
+func TestDecimal_UnmarshalJSON1(t *testing.T) {
+	d := New(0, 0)
+	err := json.NewDecoder(strings.NewReader(`"1"`)).Decode(&d)
+	if err != nil {
+		t.Error(err)
+	}
+	v := big.NewInt(0)
+	_, ok := v.SetString("1", 0)
+	if !ok {
+		t.Errorf("can't convert to decimal")
+	}
+	if d.value.Cmp(v) != 0 {
+		t.Error(d.value)
+	}
+	if d.scale != 0 {
+		t.Error(d.scale)
+	}
+}
+
+func TestDecimal_UnmarshalJSON2(t *testing.T) {
+	d := New(0, 0)
+	err := json.NewDecoder(strings.NewReader(`"1.50000000000000000000000000000001"`)).Decode(&d)
+	if err != nil {
+		t.Error(err)
+	}
+	v := big.NewInt(0)
+	_, ok := v.SetString("150000000000000000000000000000001", 0)
+	if !ok {
+		t.Errorf("can't convert to decimal")
+	}
+	if d.value.Cmp(v) != 0 {
+		t.Error(d.value)
+	}
+	if d.scale != -32 {
+		t.Error(d.scale)
+	}
+}
+
+func TestDecimal_UnmarshalJSON3(t *testing.T) {
+	d := struct {
+		Num Decimal
+	}{*New(0, 0)}
+	err := json.NewDecoder(strings.NewReader(`{"num":"1.50000000000000000000000000000001"}`)).Decode(&d)
+	if err != nil {
+		t.Error(err)
+	}
+	v := big.NewInt(0)
+	_, ok := v.SetString("150000000000000000000000000000001", 0)
+	if !ok {
+		t.Errorf("can't convert to decimal")
+	}
+	if d.Num.value.Cmp(v) != 0 {
+		t.Error(d.Num.value)
+	}
+	if d.Num.scale != -32 {
+		t.Error(d.Num.value)
+	}
+}
+
+func TestDecimal_UnmarshalJSON4(t *testing.T) {
+	d := New(0, 0)
+	err := json.NewDecoder(strings.NewReader(`"0.0001"`)).Decode(&d)
+	if err != nil {
+		t.Error(err)
+	}
+	v := big.NewInt(0)
+	_, ok := v.SetString("1", 0)
+	if !ok {
+		t.Errorf("can't convert to decimal")
+	}
+	if d.value.Cmp(v) != 0 {
+		t.Error(d.value)
+	}
+	if d.scale != -4 {
+		t.Error(d.value)
+	}
+}
+
+func TestDecimal_UnmarshalJSON5(t *testing.T) {
+	d := New(0, 0)
+	err := json.NewDecoder(strings.NewReader(`"1.2.3"`)).Decode(&d)
+	if err == nil {
+		t.Errorf("unexpected success")
+	}
+}
+
+func TestDecimal_MarshalJSON(t *testing.T) {
+	d, _ := NewFromString("15", -32)
+	var w bytes.Buffer
+	err := json.NewEncoder(&w).Encode(d)
+	if err != nil {
+		t.Error(err)
+	}
+	s := strings.TrimRight(string(w.Bytes()), "\n")
+	if s != `"0.00000000000000000000000000000015"` {
+		t.Errorf(s)
 	}
 }
